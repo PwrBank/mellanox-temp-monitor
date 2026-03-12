@@ -1,0 +1,15 @@
+[Unit]
+Description=Mellanox temperature monitor
+
+[Service]
+Type=simple
+ExecStart=/usr/local/sbin/mellanox-temp-monitor.sh
+Restart=on-failure
+RestartSec=10
+RestartPreventExitStatus=1 2
+User=root
+Group=root
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target
