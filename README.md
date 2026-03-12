@@ -22,6 +22,10 @@ mget_temp -d /dev/mst/mt4127_pciconf0
 ```
 
 ## Install
+Single line:
+```bash
+git clone https://github.com/PwrBank/mellanox-temp-monitor && cd mellanox-temp-monitor && chmod +x ./install.sh && ./install.sh
+```
 
 ```bash
 chmod +x ./install.sh ./mellanox-temp-monitor.sh
