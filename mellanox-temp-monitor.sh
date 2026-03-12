@@ -17,9 +17,24 @@ for arg in "$@"; do
     esac
 done
 
+# Snapshot caller-provided env vars so they survive config-file sourcing.
+# ${VAR+x} is non-empty only when VAR is set, which avoids tripping set -u.
+declare -A _env_snapshot=()
+for _v in MGET_TEMP_BIN MST_BIN DEVICES THRESHOLD_C POLL_INTERVAL_SEC \
+         REMINDER_INTERVAL_SEC SYSLOG_TAG SYSLOG_FACILITY MST_AUTOSTART \
+         DEBUG_STDERR; do
+    [[ -n "${!_v+x}" ]] && _env_snapshot[$_v]="${!_v}"
+done
+
 if [[ -f "$CONFIG_FILE" ]]; then
     source "$CONFIG_FILE"
 fi
+
+# Restore: env vars take precedence over config-file values.
+for _v in "${!_env_snapshot[@]}"; do
+    printf -v "$_v" '%s' "${_env_snapshot[$_v]}"
+done
+unset _env_snapshot _v
 
 MGET_TEMP_BIN="${MGET_TEMP_BIN:-mget_temp}"
 MST_BIN="${MST_BIN:-mst}"
